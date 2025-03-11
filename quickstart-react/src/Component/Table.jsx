@@ -8,7 +8,7 @@ const columnMapping = {
   color_mknx8dmx: "Status",
 };
 
-export default function Table({ data = [] }) {
+export default function Table({ data = [], getData }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
 
@@ -67,11 +67,13 @@ export default function Table({ data = [] }) {
                 data={data[index]}
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
+                getData={getData}
               />
               <DeleteUserModal
                 id={data[index].id}
                 isOpen={isDeleteModal}
                 onClose={() => setIsDeleteModal(false)}
+                getData={getData}
               />
             </tr>
           ))}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-
+import { toast } from "react-toastify";
 Modal.setAppElement("#root");
 
 const columnMapping = {
@@ -10,7 +10,7 @@ const columnMapping = {
   color_mknx8dmx: "Status",
 };
 
-const EditUserModal = ({ isOpen, onClose, data }) => {
+const EditUserModal = ({ isOpen, onClose, data, getData }) => {
   const [formState, setFormState] = useState({
     Email: "",
     firstName: "",
@@ -46,17 +46,19 @@ const EditUserModal = ({ isOpen, onClose, data }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
+          Authorization: import.meta.env.VITE_API_URL,
         },
         body: JSON.stringify({
           query: query,
-          variables: vars, // Pass the variables as part of the body
+          variables: vars,
         }),
       });
 
       const data = await response.json();
-      console.log(JSON.stringify(data, null, 2));
+      if (data) {
+        getData();
+        toast.success("User Updated!");
+      }
     } catch (error) {
       console.error("Error updating data:", error);
     }

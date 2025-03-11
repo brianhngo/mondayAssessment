@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
-
+import { toast } from "react-toastify";
 Modal.setAppElement("#root");
 
-const AddUserModal = ({ isOpen, onClose }) => {
+const AddUserModal = ({ isOpen, onClose, getData }) => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,19 +30,24 @@ const AddUserModal = ({ isOpen, onClose }) => {
         method: "post",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
+          Authorization: import.meta.env.VITE_API_URL,
         },
         body: JSON.stringify({
           query: query,
           variables: JSON.stringify(vars),
         }),
       }).then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error: ${res.statusText}`);
+        }
         setEmail("");
         setFirstName("");
         setLastName("");
         setStatus("");
+
         onClose();
+        getData();
+        toast.success("Sucessfully added");
       });
     } catch (error) {
       console.error("Error adding contact:", error);

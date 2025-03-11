@@ -7,12 +7,15 @@ import Table from "./Component/Table";
 //Explore more Monday React Components here: https://vibe.monday.com/
 import { AttentionBox } from "@vibe/core";
 import AddUserModal from "./Component/AddUserModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const monday = mondaySdk();
 
 const App = () => {
   const [context, setContext] = useState();
+
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [listData, setListData] = useState([]);
 
@@ -38,12 +41,8 @@ const App = () => {
 
   //
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const getData = async () => {
-      if (isMounted) {
-        const query = `
+  const getData = async () => {
+    const query = `
         {
           boards(ids: [8663433497]) {
             name
@@ -64,38 +63,33 @@ const App = () => {
         }
       `;
 
-        try {
-          const res = await fetch("https://api.monday.com/v2", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization:
-                "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
-            },
-            body: JSON.stringify({ query }),
-          });
+    try {
+      const res = await fetch("https://api.monday.com/v2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
+        },
+        body: JSON.stringify({ query }),
+      });
 
-          const jsonResponse = await res.json();
-          if (isMounted) {
-            setListData(
-              JSON.stringify(jsonResponse.data.boards[0].items_page.items)
-            );
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    };
+      const jsonResponse = await res.json();
 
+      console.log(JSON.stringify(jsonResponse.data.boards[0].items_page.items));
+      setListData(JSON.stringify(jsonResponse.data.boards[0].items_page.items));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
     getData();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
   return (
     <div className='flex items-center justify-center h-screen'>
+      <ToastContainer />
       <div className='text-green-500 text-center'>
         <button
           onClick={(event) => setIsAddUserModalOpen(true)}
@@ -106,10 +100,11 @@ const App = () => {
         <AddUserModal
           isOpen={isAddUserModalOpen}
           onClose={() => setIsAddUserModalOpen(false)}
+          getData={getData}
         />
 
         {listData && listData.length > 1 ? (
-          <Table data={JSON.parse(listData)} />
+          <Table data={JSON.parse(listData)} getData={getData} />
         ) : (
           <div>Loading or No Data Available</div>
         )}

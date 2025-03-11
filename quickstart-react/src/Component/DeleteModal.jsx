@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 import Modal from "react-modal";
-
+import { toast } from "react-toastify";
 Modal.setAppElement("#root");
 
-const DeleteUserModal = ({ isOpen, onClose, id }) => {
+const DeleteUserModal = ({ isOpen, onClose, id, getData }) => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -14,14 +14,15 @@ const DeleteUserModal = ({ isOpen, onClose, id }) => {
         method: "post",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
+          Authorization: import.meta.env.VITE_API_URL,
         },
         body: JSON.stringify({
           query: query,
         }),
       }).then((res) => {
         onClose();
+        getData();
+        toast.success("User been deleted");
       });
     } catch (error) {
       console.error("Error adding contact:", error);
