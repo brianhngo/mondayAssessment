@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import EditUserModal from "./EditUserModal";
 import DeleteUserModal from "./DeleteModal";
 const columnMapping = {
@@ -12,8 +12,50 @@ export default function Table({ data = [], getData }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
 
+  const [originalData, setOriginalData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState("");
+
+  useEffect(() => {
+    // Once data passed down from parent component
+    if (data.length > 0) {
+      setOriginalData(data);
+    }
+  }, [data]);
+
+  const filteredData = useMemo(() => {
+    return filterStatus
+      ? originalData.filter((item) =>
+          item.column_values.some(
+            (column) =>
+              column.id === "color_mknx8dmx" && column.text === filterStatus
+          )
+        )
+      : originalData;
+  }, [originalData, filterStatus]);
+
   return (
     <div className='relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border'>
+      <div className='mb-5'>
+        <label
+          htmlFor='status'
+          className='block mb-2 text-sm font-medium text-gray-900'>
+          Status
+        </label>
+        <select
+          value={filterStatus}
+          onChange={(event) => setFilterStatus(event.target.value)}
+          id='status'
+          className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
+          required>
+          <option value='' disabled>
+            Select a status
+          </option>
+          <option value='Done'>Done</option>
+          <option value='Working on it'>Working on it</option>
+          <option value='Stuck'>Stuck</option>
+        </select>
+      </div>
+
       <table className='w-full text-left table-auto min-w-max'>
         <thead>
           <tr>
@@ -40,7 +82,7 @@ export default function Table({ data = [], getData }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {filteredData.map((item, index) => (
             <tr key={index} className='border-b border-gray-200'>
               <td className='p-4 border-b border-gray-300'>{item.name} </td>
               {Object.keys(columnMapping).map((key) => {
