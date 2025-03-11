@@ -76,7 +76,6 @@ const App = () => {
 
       const jsonResponse = await res.json();
 
-      console.log(JSON.stringify(jsonResponse.data.boards[0].items_page.items));
       setListData(JSON.stringify(jsonResponse.data.boards[0].items_page.items));
     } catch (error) {
       console.error("Error fetching data:", error);
