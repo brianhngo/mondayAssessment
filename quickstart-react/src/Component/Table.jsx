@@ -23,7 +23,7 @@ export default function Table({ data = [], getData }) {
   }, [data]);
 
   const filteredData = useMemo(() => {
-    return filterStatus
+    return filterStatus !== "None"
       ? originalData.filter((item) =>
           item.column_values.some(
             (column) =>
@@ -39,7 +39,7 @@ export default function Table({ data = [], getData }) {
         <label
           htmlFor='status'
           className='block mb-2 text-sm font-medium text-gray-900'>
-          Status
+          Filter by Status
         </label>
         <select
           value={filterStatus}
@@ -50,6 +50,7 @@ export default function Table({ data = [], getData }) {
           <option value='' disabled>
             Select a status
           </option>
+          <option value='None'> None </option>
           <option value='Done'>Done</option>
           <option value='Working on it'>Working on it</option>
           <option value='Stuck'>Stuck</option>
