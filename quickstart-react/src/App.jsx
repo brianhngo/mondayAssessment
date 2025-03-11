@@ -14,6 +14,10 @@ const monday = mondaySdk();
 const App = () => {
   const [context, setContext] = useState();
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [listData, setListData] = useState([]);
+
+  // I dont know if this is needed
+
   useEffect(() => {
     // Notice this method notifies the monday platform that user gains a first value in an app.
     // Read more about it here: https://developer.monday.com/apps/docs/mondayexecute#value-created-for-user/
@@ -32,6 +36,64 @@ const App = () => {
   }.
   Let's start building your amazing app, which will change the world!`;
 
+  //
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const getData = async () => {
+      if (isMounted) {
+        const query = `
+        {
+          boards(ids: [8663433497]) {
+            name
+            id
+            description
+            items_page {
+              items {
+                name
+                id
+                column_values {
+                  id
+                  type
+                  text
+                }
+              }
+            }
+          }
+        }
+      `;
+
+        try {
+          const res = await fetch("https://api.monday.com/v2", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                "eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQ4MzU0MTI2MywiYWFpIjoxMSwidWlkIjo3MzI1Nzk2NywiaWFkIjoiMjAyNS0wMy0xMFQxOTo0NToxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6Mjg0NjY3ODAsInJnbiI6InVzZTEifQ.EH_qsIFifbEoN1orsWbTa_5iO50NY-FHhYWBPUCJpks",
+            },
+            body: JSON.stringify({ query }),
+          });
+
+          const jsonResponse = await res.json();
+          if (isMounted) {
+            setListData(
+              JSON.stringify(jsonResponse.data.boards[0].items_page.items)
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    getData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className='flex items-center justify-center h-screen'>
       <div className='text-green-500 text-center'>
@@ -45,7 +107,12 @@ const App = () => {
           isOpen={isAddUserModalOpen}
           onClose={() => setIsAddUserModalOpen(false)}
         />
-        <Table />
+
+        {listData && listData.length > 1 ? (
+          <Table data={JSON.parse(listData)} />
+        ) : (
+          <div>Loading or No Data Available</div>
+        )}
       </div>
     </div>
   );

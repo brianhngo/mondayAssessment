@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import EditUserModal from "./EditUserModal";
+import DeleteUserModal from "./DeleteModal";
+const columnMapping = {
+  text_mkny3hv7: "First Name",
+  text_mknymf5g: "Last Name",
+  text_mknyke0r: "Email",
+  color_mknx8dmx: "Status",
+};
 
-export default function Table() {
+export default function Table({ data = [] }) {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
+
   return (
     <div className='relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border'>
       <table className='w-full text-left table-auto min-w-max'>
@@ -8,68 +19,62 @@ export default function Table() {
           <tr>
             <th className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
               <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'>
-                Email
+                {" "}
+                Name
               </p>
             </th>
+            {Object.values(columnMapping).map((columnName, index) => (
+              <th
+                key={index}
+                className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
+                <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'>
+                  {columnName}
+                </p>
+              </th>
+            ))}
             <th className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
               <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'>
-                First Name
+                Actions
               </p>
-            </th>
-            <th className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'>
-                Last Name
-              </p>
-            </th>
-            <th className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'>
-                Status
-              </p>
-            </th>
-            <th className='p-4 border-b border-blue-gray-100 bg-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70'></p>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className='p-4 border-b border-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900'>
-                John@mail.com
-              </p>
-            </td>
-            <td className='p-4 border-b border-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900'>
-                John
-              </p>
-            </td>
-            <td className='p-4 border-b border-blue-gray-50'>
-              <p className='block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900'>
-                Smith
-              </p>
-            </td>
-            <td className='p-4 border-b border-blue-gray-50'>
-              <a
-                href='#'
-                className='block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900'>
-                Active
-              </a>
-            </td>
-            <td className='p-4 border-b border-blue-gray-50'>
-              <button
-                href='#'
-                className='text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'>
-                {" "}
-                Edit{" "}
-              </button>
-              <button
-                href='#'
-                className='text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'>
-                {" "}
-                Delete{" "}
-              </button>
-            </td>
-          </tr>
+          {data.map((item, index) => (
+            <tr key={index} className='border-b border-gray-200'>
+              <td className='p-4 border-b border-gray-300'>{item.name} </td>
+              {Object.keys(columnMapping).map((key) => {
+                const column = item.column_values.find((col) => col.id === key);
+                return (
+                  <td key={key} className='p-4 border-b border-gray-300'>
+                    {column ? column.text : "N/A"}
+                  </td>
+                );
+              })}
+              <td className='p-4 border-b border-gray-300'>
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className='text-white bg-green-500 hover:bg-green-600 px-3 py-1 rounded-md mr-2'>
+                  Edit
+                </button>
+                <button
+                  onClick={() => setIsDeleteModal(true)}
+                  className='text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md'>
+                  Delete
+                </button>
+              </td>
+              <EditUserModal
+                data={data[index]}
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+              />
+              <DeleteUserModal
+                id={data[index].id}
+                isOpen={isDeleteModal}
+                onClose={() => setIsDeleteModal(false)}
+              />
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
