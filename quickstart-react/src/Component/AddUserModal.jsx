@@ -93,6 +93,7 @@ const AddUserModal = ({ isOpen, onClose, getData }) => {
             onChange={(event) => setFirstName(event.target.value)}
             placeholder='John'
             type='text'
+            minLength={1}
             id='firstName'
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
             required
@@ -110,6 +111,7 @@ const AddUserModal = ({ isOpen, onClose, getData }) => {
             placeholder='Smith'
             type='text'
             id='lastName'
+            minLength={1}
             className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
             required
           />

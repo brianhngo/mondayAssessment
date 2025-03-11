@@ -54,11 +54,12 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
         }),
       });
 
-      const data = await response.json();
-      if (data) {
-        getData();
-        toast.success("User Updated!");
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
       }
+
+      getData();
+      toast.success("User Updated!");
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -118,6 +119,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
             First Name
           </label>
           <input
+            minLength={1}
             value={formState.firstName}
             onChange={(event) => handleInputChange(event, "firstName")}
             type='text'
@@ -135,6 +137,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
             Last Name
           </label>
           <input
+            minLength={1}
             value={formState.lastName}
             onChange={(event) => handleInputChange(event, "lastName")}
             type='text'

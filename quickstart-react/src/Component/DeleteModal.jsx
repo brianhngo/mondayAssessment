@@ -20,6 +20,9 @@ const DeleteUserModal = ({ isOpen, onClose, id, getData }) => {
           query: query,
         }),
       }).then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error: ${res.statusText}`);
+        }
         onClose();
         getData();
         toast.success("User been deleted");
