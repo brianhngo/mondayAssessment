@@ -37,7 +37,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
   `;
 
     let vars = {
-      itemId: data.id, // Ensure `data.id` is a valid ID (string or number)
+      itemId: data.id, 
       body: bodyContent,
     };
 
@@ -72,7 +72,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
     }));
   };
 
-  // Prepopulating the form data when modal is opened
+
   useEffect(() => {
     if (data) {
       const mappedData = {};
