@@ -13,7 +13,7 @@ export default function Table({ data = [], getData }) {
   const [isDeleteModal, setIsDeleteModal] = useState(false);
 
   const [originalData, setOriginalData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState("");
+  const [filterStatus, setFilterStatus] = useState("None");
 
   useEffect(() => {
     // Once data passed down from parent component
@@ -32,7 +32,7 @@ export default function Table({ data = [], getData }) {
         )
       : originalData;
   }, [originalData, filterStatus]);
-
+  console.log(filteredData, data);
   return (
     <div className='relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border'>
       <div className='mb-5'>
@@ -47,10 +47,11 @@ export default function Table({ data = [], getData }) {
           id='status'
           className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5'
           required>
-          <option value='' disabled>
-            Select a status
+          <option disabled>Select a status</option>
+          <option value='None' default>
+            {" "}
+            None{" "}
           </option>
-          <option value='None'> None </option>
           <option value='Done'>Done</option>
           <option value='Working on it'>Working on it</option>
           <option value='Stuck'>Stuck</option>

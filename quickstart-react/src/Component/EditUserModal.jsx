@@ -30,10 +30,10 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
   `;
 
     const bodyContent = `
-    Last Name: ${formState.lastName}, 
-    First Name: ${formState.firstName}, 
-    Email: ${formState.Email}, 
-    Status: ${formState.Status}
+    'text_mknymf5g': ${formState.lastName}, 
+    'text_mkny3hv7': ${formState.firstName}, 
+    'text_mknyke0r: ${formState.Email}, 
+    'color_mknx8dmx': ${formState.Status}
   `;
 
     let vars = {
@@ -60,6 +60,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
 
       getData();
       toast.success("User Updated!");
+      onClose();
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -89,7 +90,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
             mappedData.email = col.text;
             break;
           case "color_mknx8dmx":
-            mappedData.status = col.text;
+            mappedData.Status = col.text;
             break;
           default:
             break;
@@ -103,6 +104,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
     }
   }, [data]);
 
+  console.log(formState.Status);
   return (
     <Modal
       isOpen={isOpen}

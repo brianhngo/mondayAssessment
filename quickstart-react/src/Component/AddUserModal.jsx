@@ -15,7 +15,7 @@ const AddUserModal = ({ isOpen, onClose, getData }) => {
     try {
       let query =
         "mutation ($myItemName: String!, $columnVals: JSON!) { create_item (board_id: 8663433497, item_name: $myItemName, column_values: $columnVals) { id } }";
-
+      // Column UID : value
       let vars = {
         myItemName: `${firstName} ${lastName}`,
         columnVals: JSON.stringify({
@@ -40,6 +40,7 @@ const AddUserModal = ({ isOpen, onClose, getData }) => {
         if (!res.ok) {
           throw new Error(`Error: ${res.statusText}`);
         }
+        // Resets states back to default
         setEmail("");
         setFirstName("");
         setLastName("");
@@ -54,7 +55,6 @@ const AddUserModal = ({ isOpen, onClose, getData }) => {
     }
   };
 
-  // 8663433497
   return (
     <Modal
       isOpen={isOpen}

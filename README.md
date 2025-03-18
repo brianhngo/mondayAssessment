@@ -25,6 +25,8 @@ And then to run an application with the monday tunnel, run:
 Find the provided URL in your terminal. This is your public URL, and you can use it to test your application.
 Example: https://abcd12345.apps-tunnel.monday.app
 
+### `npx jest file.name` for running tests
+
 ## Configure Monday App
 
 1. Open monday.com, login to your account and go to a "Developers" section.
