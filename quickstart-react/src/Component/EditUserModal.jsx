@@ -20,7 +20,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-
+    // Fix the create_update mutation. Wrong query syntax
     let query = `
     mutation ($itemId: ID!, $body: String!) {
       create_update (item_id: $itemId, body: $body) {
@@ -37,7 +37,7 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
   `;
 
     let vars = {
-      itemId: data.id, // Ensure `data.id` is a valid ID (string or number)
+      itemId: data.id,
       body: bodyContent,
     };
 
@@ -73,7 +73,6 @@ const EditUserModal = ({ isOpen, onClose, data, getData }) => {
     }));
   };
 
-  // Prepopulating the form data when modal is opened
   useEffect(() => {
     if (data) {
       const mappedData = {};

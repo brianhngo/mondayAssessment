@@ -32,7 +32,7 @@ export default function Table({ data = [], getData }) {
         )
       : originalData;
   }, [originalData, filterStatus]);
-  console.log(filteredData, data);
+
   return (
     <div className='relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border'>
       <div className='mb-5'>
